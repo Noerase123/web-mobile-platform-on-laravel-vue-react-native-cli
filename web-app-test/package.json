@@ -16,6 +16,9 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "dayjs": "^1.11.10",
+        "vue-json-excel3": "^1.0.19",
+        "vue-router": "^4.2.5",
         "vuetify": "^3.4.6"
     }
 }

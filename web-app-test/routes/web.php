@@ -21,6 +21,8 @@ Route::get('/register', function () {
     return view('registration');
 });
 
-Route::get('/details', function () {
-    return view('details');
+Route::get('/details/{id}', function ($id) {
+    return view('details', [
+        'id' => $id
+    ]);
 });

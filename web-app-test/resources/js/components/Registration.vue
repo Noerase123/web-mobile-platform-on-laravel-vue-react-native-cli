@@ -1,10 +1,12 @@
 <template>
-  <v-app>
-    <h1>registration</h1>
-  </v-app>
+  <sidebar-wrapper active="register">
+    <p class="title-text">Student Registration</p>
+    <register-form></register-form>
+  </sidebar-wrapper>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     async created() {
         const { data } = await axios.get('/api/students/');
@@ -17,5 +19,8 @@ export default {
 </script>
 
 <style>
-
+  .title-text {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
 </style>
