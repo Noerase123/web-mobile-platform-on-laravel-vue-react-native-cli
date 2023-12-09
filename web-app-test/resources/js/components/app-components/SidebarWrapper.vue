@@ -46,6 +46,11 @@ export default {
           route: '/register',
           name: 'register',
           title: 'Register a Student'
+        },
+        {
+          route: '/approvals',
+          name: 'approvals',
+          title: 'Approvals'
         }
       ]
     }

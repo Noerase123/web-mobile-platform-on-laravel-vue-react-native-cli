@@ -19,22 +19,20 @@ const app = createApp({});
 import HomeComponent from './components/HomeComponent.vue';
 import Registration from './components/Registration.vue';
 import Details from './components/DetailsComponent.vue';
+import Approvals from './components/ApprovalsComponent.vue';
 
 // components
 import SidebarWrapper from './components/app-components/SidebarWrapper.vue';
 import RegisterForm from './components/app-components/RegisterForm.vue';
 import ViewForm from './components/app-components/ViewForm.vue';
 
-// vendor
-import JsonExcel from "vue-json-excel3";
-
 app.component('home', HomeComponent);
 app.component('registration', Registration);
 app.component('details-component', Details);
+app.component('approvals', Approvals);
 app.component('sidebar-wrapper', SidebarWrapper);
 app.component('register-form', RegisterForm);
 app.component('view-form', ViewForm);
-app.component('download-excel', JsonExcel);
 
 /**
  * The following block of code may be used to automatically register your

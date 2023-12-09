@@ -150,6 +150,8 @@
 <script>
 import dayjs from 'dayjs';
 import axios from 'axios';
+import emailjs from '@emailjs/browser';
+
 export default {
   props: {
     id: String,
@@ -177,6 +179,14 @@ export default {
     this.onView();
   },
   methods: {
+    sendEmail() {
+      emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this.$refs.form, 'YOUR_PUBLIC_KEY')
+        .then((result) => {
+            console.log('SUCCESS!', result.text);
+        }, (error) => {
+            console.log('FAILED...', error.text);
+        });
+    },
     async onView() {
       const { data } = await axios.get(`/api/students/${this.id}`);
       console.log('data', data.data);
@@ -188,12 +198,14 @@ export default {
         status
       });
       console.log('data', data);
+      // this.sendEmail();
       this.onView();
       alert('updated successfully');
     },
     async onSubmit() {
       const { data } = await axios.post('/api/students/', this.payload);
       console.log('data', data);
+      alert('created student successfully');
     },
     birthdayFormat(birthday) {
       return dayjs(birthday).format('MMM DD, YYYY');

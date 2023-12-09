@@ -1,11 +1,39 @@
 <template>
-  <sidebar-wrapper active="list">
+  <sidebar-wrapper active="approvals">
     <div class="row justify-between">
-      <p class="title-text">Students List</p>
+      <p class="title-text">Approvals</p>
       <button v-on:click="downloadFile" class="export-btn">
         <i class="fa-solid fa-file-arrow-down"></i>
         Export Excel
       </button>
+    </div>
+    <div class="tabs">
+      <div class="tab" v-for="(item, i) in tabs" :key="i">
+        <div v-if="activeTab === item.category" class="active">
+          <div v-if="item.category === 'all'">
+            <button v-on:click="onShowAll">
+              {{ item.title }}
+            </button>
+          </div>
+          <div v-else>
+            <button v-on:click="onShowPerStatus(item.category)">
+              {{ item.title }}
+            </button>
+          </div>
+        </div>
+        <div v-else>
+          <div v-if="item.category === 'all'">
+            <button v-on:click="onShowAll">
+              {{ item.title }}
+            </button>
+          </div>
+          <div v-else>
+            <button v-on:click="onShowPerStatus(item.category)">
+              {{ item.title }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <table class="table">
       <thead>
@@ -17,6 +45,7 @@
           <th>Contact #</th>
           <th>Email</th>
           <th>Relationship</th>
+          <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -29,6 +58,23 @@
           <td>{{ item.contactNum }}</td>
           <td>{{ item.email }}</td>
           <td>{{ item.relationship }}</td>
+          <td>
+            <div v-if="item.status === 'pending'">
+              <div class="status pending">
+                {{ item.status.toUpperCase() }}
+              </div>
+            </div>
+            <div v-else-if="item.status === 'declined'">
+              <div class="status declined">
+                {{ item.status.toUpperCase() }}
+              </div>
+            </div>
+            <div v-else>
+              <div class="status approved">
+                {{ item.status.toUpperCase() }}
+              </div>
+            </div>
+          </td>
           <td>
             <div class="row justify-around">
               <a :href="`/details/${item.id}`" class="view">
@@ -54,7 +100,25 @@ export default {
   data() {
     return {
       activeTab: 'all',
-      listData: []
+      listData: [],
+      tabs: [
+        {
+          category: 'all',
+          title: 'Show all'
+        },
+        {
+          category: 'pending',
+          title: 'Pending'
+        },
+        {
+          category: 'approved',
+          title: 'Approved'
+        },
+        {
+          category: 'declined',
+          title: 'Declined'
+        }
+      ]
     }
   },
   async created() {
@@ -109,6 +173,7 @@ export default {
     padding: 5px 10px;
     font-size: 15px;
     font-weight: 600;
+    width: 100px;
   }
   .tab {
     text-align: center;

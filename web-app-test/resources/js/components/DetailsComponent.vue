@@ -16,16 +16,14 @@ export default {
   },
   data() {
     return {
-      response: {
-        fullName: '',
-      }
+      response: {}
     }
   },
   async created() {
     const { data } = await axios.get(`/api/students/${this.id}`);
     console.log('data', data.data);
     const payload = data.data;
-    this.response.fullName = `${payload.firstName} ${payload.lastName}`;
+    this.response['fullName'] = `${payload.firstName} ${payload.lastName}`;
   }
 }
 </script>
