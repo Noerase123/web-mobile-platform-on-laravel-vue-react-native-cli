@@ -58,9 +58,7 @@ export default {
     }
   },
   async created() {
-    const { data } = await axios.get('/api/students/');
-    console.log('data', data.data);
-    this.listData = data.data;
+    this.onShowAll();
   },
   mounted() {
     console.log('Home Component mounted.')
@@ -74,16 +72,10 @@ export default {
       if (data) exportFromJSON({ data, fileName, exportType });
     },
     async onShowAll() {
-      const { data } = await axios.get('/api/students/');
-      console.log('data', data.data);
+      const { data } = await axios.get(`/api/students`);
+      console.log('data testing', data.data);
       this.listData = data.data;
       this.activeTab = 'all';
-    },
-    async onShowPerStatus(status) {
-      const { data } = await axios.get('/api/students/category/'+status);
-      console.log('showperstatus', data.data);
-      this.listData = data.data;
-      this.activeTab = status;
     },
     birthdayFormat(birtday) {
       return dayjs(birtday).format('MM/DD/YYYY');

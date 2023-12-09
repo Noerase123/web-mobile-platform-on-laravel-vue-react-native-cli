@@ -122,9 +122,7 @@ export default {
     }
   },
   async created() {
-    const { data } = await axios.get('/api/students/');
-    console.log('data', data.data);
-    this.listData = data.data;
+    this.onShowAll();
   },
   mounted() {
     console.log('Home Component mounted.')
