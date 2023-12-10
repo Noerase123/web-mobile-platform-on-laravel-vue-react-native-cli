@@ -17,7 +17,9 @@ function App(): React.JSX.Element {
     <NavigationContainer>
       <Stack.Navigator initialRouteName='MovieList'>
         <Stack.Screen name="MovieList" component={MovieList} />
-        <Stack.Screen name="MovieDetails" component={MovieDetails} />
+        <Stack.Screen name="MovieDetails" component={MovieDetails} options={{
+          headerShown: false
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
