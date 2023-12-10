@@ -16,21 +16,24 @@ type TMovies = {
 export function MovieList(): React.JSX.Element {
   const navigation = useNavigation<any>();
   const [search, setSearch] = useState('Marvel');
+  const [page, setPage] = useState(1);
   const [searchEnable, setSearchEnable] = useState(false);
   const [data, setData] = useState<TMovies[]>([]);
-  const [isLoading, setLoading] = useState(false);
 
   const fetchMovies = async (search: string) => {
-    setLoading(true);
-    const response = await axios.get(`https://omdbapi.com/?apikey=eed823ea&s=${search}&type=movie`);
-    console.log('response fetchMovies', JSON.stringify(response.data.Search, null, '\t'));
-    console.log('response', response.data);
+    const response = await axios.get(`https://omdbapi.com/`, {
+      params: {
+        apiKey: 'eed823ea',
+        s: search,
+        type: 'movie',
+        page
+      }
+    });
     if (response.data.Response === "True") {
-      setData(response.data.Search);
+      setData(prev => [...prev, ...response.data.Search]);
     } else {
       setData([]);
     }
-    setLoading(false);
   }
 
   const onSubmitSearch = (text: string) => {
@@ -55,7 +58,7 @@ export function MovieList(): React.JSX.Element {
     } else {
       fetchMovies(search);
     }
-  }, [search]);
+  }, [search, page]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -85,11 +88,17 @@ export function MovieList(): React.JSX.Element {
     <SafeAreaView>
       <StatusBar barStyle='dark-content' />
       <View style={styles.mainContainer}>
-        {isLoading ? <ActivityIndicator style={{ marginTop: 20 }} size="large" /> : data.length > 0 ? (
+        {data.length > 0 ? (
           <FlatList
             style={{ marginTop: searchEnable ? 75 : 0 }}
             data={data}
             numColumns={2}
+            onEndReachedThreshold={0.3}
+            onEndReached={() => {
+              if (data.length > 0) {
+                setPage(page + 1)
+              }
+            }}
             keyExtractor={(item, index) => item.Title}
             renderItem={({ item }) => (
               <Card containerStyle={styles.cardContainer}>
