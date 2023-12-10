@@ -16,6 +16,7 @@ type TMovies = {
 export function MovieList(): React.JSX.Element {
   const navigation = useNavigation<any>();
   const [search, setSearch] = useState('Marvel');
+  const [oldSearch, setOldSearch] = useState('');
   const [page, setPage] = useState(1);
   const [searchEnable, setSearchEnable] = useState(false);
   const [data, setData] = useState<TMovies[]>([]);
@@ -30,7 +31,12 @@ export function MovieList(): React.JSX.Element {
       }
     });
     if (response.data.Response === "True") {
-      setData(prev => [...prev, ...response.data.Search]);
+      if (oldSearch === search) {
+        setData(prev => [...prev, ...response.data.Search]);
+      } else {
+        setOldSearch(search);
+        setData(response.data.Search);
+      }
     } else {
       setData([]);
     }
@@ -51,6 +57,10 @@ export function MovieList(): React.JSX.Element {
       setSearchEnable(false);
     }
   }, [isKeyboardVisible]);
+
+  useEffect(() => {
+    setOldSearch(search);
+  }, []);
 
   useEffect(() => {
     if (search === '') {
@@ -99,7 +109,7 @@ export function MovieList(): React.JSX.Element {
                 setPage(page + 1)
               }
             }}
-            keyExtractor={(item, index) => item.Title}
+            keyExtractor={(item, index) => item.Title + index}
             renderItem={({ item }) => (
               <Card containerStyle={styles.cardContainer}>
                 <Pressable onPress={handleDetails(item.imdbID)}>
