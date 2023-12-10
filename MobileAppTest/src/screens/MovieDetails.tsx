@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   actorCard: {
-    height: 150,
+    height: 100,
     width: 100,
     alignSelf: 'center',
     backgroundColor: '#e1e1e1'

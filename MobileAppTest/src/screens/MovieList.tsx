@@ -24,7 +24,12 @@ export function MovieList(): React.JSX.Element {
     setLoading(true);
     const response = await axios.get(`https://omdbapi.com/?apikey=eed823ea&s=${search}&type=movie`);
     console.log('response fetchMovies', JSON.stringify(response.data.Search, null, '\t'));
-    setData(response.data.Search);
+    console.log('response', response.data);
+    if (response.data.Response === "True") {
+      setData(response.data.Search);
+    } else {
+      setData([]);
+    }
     setLoading(false);
   }
 
@@ -106,9 +111,7 @@ export function MovieList(): React.JSX.Element {
             )}
           />
         ) : (
-          <View>
-            <Text>No Movies found</Text>
-          </View>
+          <Text style={styles.notFound}>No Movies found</Text>
         )}
         {searchEnable && (
           <View style={styles.searchContainer}>
@@ -129,6 +132,10 @@ export function MovieList(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  notFound: {
+    marginTop: 20,
+    alignSelf: 'center'
+  },
   searchContainer: {
     backgroundColor: '#fff',
     paddingHorizontal: 25,
