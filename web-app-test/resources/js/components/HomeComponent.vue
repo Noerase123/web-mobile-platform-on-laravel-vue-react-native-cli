@@ -72,7 +72,7 @@ export default {
       if (data) exportFromJSON({ data, fileName, exportType });
     },
     async onShowAll() {
-      const { data } = await axios.get(`/api/students`);
+      const { data } = await axios.get('/api/students/category/approved');
       console.log('data testing', data.data);
       this.listData = data.data;
       this.activeTab = 'all';

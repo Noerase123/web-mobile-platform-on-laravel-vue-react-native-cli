@@ -139,7 +139,7 @@
         <button>
           Cancel
         </button>
-        <button class="save" v-on:click="onSubmit">
+        <button class="save" type="submit">
           Save
         </button>
       </div>
@@ -151,6 +151,10 @@
 import dayjs from 'dayjs';
 import axios from 'axios';
 import emailjs from '@emailjs/browser';
+
+const YOUR_PUBLIC_KEY = '6-V6RWYywCxDUeuSR';
+const YOUR_SERVICE_ID = 'service_s55noeg';
+const YOUR_TEMPLATE_ID = 'template_mcv5pai';
 
 export default {
   props: {
@@ -180,7 +184,12 @@ export default {
   },
   methods: {
     sendEmail() {
-      emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this.$refs.form, 'YOUR_PUBLIC_KEY')
+      emailjs.send(YOUR_SERVICE_ID, YOUR_TEMPLATE_ID, {
+        to_name: `${this.payload.parentFirstName} ${this.payload.parentLastName}`,
+        from_name: 'Isaac School',
+        reply_to: this.payload.email,
+        message: 'We let you know that your application to Isaac School has been approved!'
+      }, YOUR_PUBLIC_KEY)
         .then((result) => {
             console.log('SUCCESS!', result.text);
         }, (error) => {
@@ -198,9 +207,9 @@ export default {
         status
       });
       console.log('data', data);
-      // this.sendEmail();
       this.onView();
       alert('updated successfully');
+      this.sendEmail();
     },
     async onSubmit() {
       const { data } = await axios.post('/api/students/', this.payload);
