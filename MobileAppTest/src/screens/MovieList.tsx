@@ -3,6 +3,7 @@ import { View, Pressable, SafeAreaView, StyleSheet, FlatList, ActivityIndicator,
 import { useNavigation } from '@react-navigation/native';
 import { Card, Text, Image } from '@rneui/themed';
 import { BurgerMenuIcon, ImageIcon, SearchIcon } from '../../assets/icons';
+import { useColorScheme } from 'react-native';
 import axios from 'axios';
 
 type TMovies = {
@@ -20,6 +21,7 @@ export function MovieList(): React.JSX.Element {
   const [page, setPage] = useState(1);
   const [searchEnable, setSearchEnable] = useState(false);
   const [data, setData] = useState<TMovies[]>([]);
+  const colorScheme = useColorScheme();
 
   const fetchMovies = async (search: string) => {
     const response = await axios.get(`https://omdbapi.com/`, {
@@ -72,32 +74,36 @@ export function MovieList(): React.JSX.Element {
 
   useEffect(() => {
     navigation.setOptions({
+      headerStyle: {
+        backgroundColor: colorScheme === 'dark' ? '#02152B' : '#ffffff'
+      },
+      headerTintColor: colorScheme === 'light' ? '#02152B' : '#ffffff',
       headerTitle: `Search "${search}"`,
       headerLeft: () => (
         <Pressable>
           <View style={styles.menuIcon}>
-            <BurgerMenuIcon />
+            <BurgerMenuIcon fill={colorScheme === 'dark' ? '#fff' : '#000'} />
           </View>
         </Pressable>
       ),
       headerRight: () => (
         <Pressable onPress={handleSearch}>
           <View style={styles.accountIcon}>
-            <SearchIcon fill="#000" width={25} height={25} />
+            <SearchIcon fill={colorScheme === 'dark' ? '#fff' : '#000'} width={25} height={25} />
           </View>
         </Pressable>
       )
     });
-  }, [search]);
+  }, [search, colorScheme]);
 
   const handleDetails = (imdbID: string) => () => {
     navigation.navigate('MovieDetails', { imdbID });
   }
 
   return (
-    <SafeAreaView>
-      <StatusBar barStyle='dark-content' />
-      <View style={styles.mainContainer}>
+    <View>
+      <StatusBar barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} />
+      <View style={[styles.mainContainer, { backgroundColor: colorScheme === 'dark' ? '#07203C' : 'transparent' }]}>
         {data.length > 0 ? (
           <FlatList
             style={{ marginTop: searchEnable ? 75 : 0 }}
@@ -133,7 +139,7 @@ export function MovieList(): React.JSX.Element {
           <Text style={styles.notFound}>No Movies found</Text>
         )}
         {searchEnable && (
-          <View style={styles.searchContainer}>
+          <View style={[styles.searchContainer, { backgroundColor: colorScheme === 'dark' ? '#07203C' : '#fff' }]}>
             <View style={[styles.inputContainer, styles.row]}>
               <SearchIcon />
               <TextInput
@@ -146,7 +152,7 @@ export function MovieList(): React.JSX.Element {
           </View>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 
