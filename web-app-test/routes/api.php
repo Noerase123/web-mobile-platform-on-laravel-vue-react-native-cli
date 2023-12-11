@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/students', 'App\Http\Controllers\api\StudentController@index');
 Route::get('/students/category/{category}', 'App\Http\Controllers\api\StudentController@showRef');
+Route::get('/students/report/{category}', 'App\Http\Controllers\api\StudentController@showRaw');
 Route::post('/students', 'App\Http\Controllers\api\StudentController@store');
 Route::get('/students/{id}', 'App\Http\Controllers\api\StudentController@show');
 Route::patch('/students/{id}', 'App\Http\Controllers\api\StudentController@update');

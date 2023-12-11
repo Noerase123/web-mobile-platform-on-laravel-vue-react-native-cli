@@ -13,7 +13,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $showAll = Students::all();
+        $showAll = Students::paginate(5);
         return response()->json([
             'data' => $showAll
         ],200);
@@ -61,6 +61,31 @@ class StudentController extends Controller
      * Display the specified resource.
      */
     public function showRef($category)
+    {
+        $model = [];
+        if ($category != 'all') {
+            $model = Students::where('status', $category)->paginate(5);
+        } else {
+            $model = Students::paginate(5);
+        }
+
+        if (is_null($model)) {
+            return response()->json([
+                'data' => 'Not found'
+            ],404);
+        }
+        else {
+            return response()->json([
+                'data' => $model
+            ],200);
+        }
+    }
+
+
+    /**
+     * Display the raw resource.
+     */
+    public function showRaw($category)
     {
         $model = [];
         if ($category != 'all') {

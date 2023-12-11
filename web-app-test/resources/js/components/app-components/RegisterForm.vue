@@ -192,8 +192,10 @@ export default {
       }, YOUR_PUBLIC_KEY)
         .then((result) => {
             console.log('SUCCESS!', result.text);
+            alert('application approved');
         }, (error) => {
             console.log('FAILED...', error.text);
+            alert('network error');
         });
     },
     async onView() {
@@ -208,13 +210,13 @@ export default {
       });
       console.log('data', data);
       this.onView();
-      alert('updated successfully');
       this.sendEmail();
     },
     async onSubmit() {
       const { data } = await axios.post('/api/students/', this.payload);
       console.log('data', data);
       alert('created student successfully');
+      window.location.href = "/approvals";
     },
     birthdayFormat(birthday) {
       return dayjs(birthday).format('MMM DD, YYYY');

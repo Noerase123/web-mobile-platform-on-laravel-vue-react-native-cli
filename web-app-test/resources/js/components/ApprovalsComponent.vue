@@ -88,6 +88,14 @@
         </tr>
       </tbody>
     </table>
+    <div v-if="total > 5" class="pagination-container">
+      <button class="pagination-btn" v-on:click="minusPage">
+        <i class="fa-solid fa-left-long"></i>
+      </button>
+      <button class="pagination-btn" v-on:click="addPage">
+        <i class="fa-solid fa-right-long"></i>
+      </button>
+    </div>
   </sidebar-wrapper>
 </template>
 
@@ -100,6 +108,8 @@ export default {
   data() {
     return {
       activeTab: 'all',
+      page: 1,
+      total: 0,
       listData: [],
       tabs: [
         {
@@ -128,23 +138,48 @@ export default {
     console.log('Home Component mounted.')
   },
   methods: {
-    downloadFile() {
-      const data = this.listData;
+    async downloadFile() {
+      const response = await axios.get('/api/students/report/' + this.activeTab);
+      const data = response.data.data;
       const fileName = "student-report";
       const exportType = exportFromJSON.types.csv;
 
       if (data) exportFromJSON({ data, fileName, exportType });
     },
     async onShowAll() {
-      const { data } = await axios.get('/api/students/');
-      console.log('data', data.data);
-      this.listData = data.data;
+      const { data } = await axios.get('/api/students', {
+        params: {
+          page: this.page
+        }
+      });
+      this.total = data.data.total;
+      this.listData = data.data.data;
       this.activeTab = 'all';
     },
+    addPage() {
+      this.page++;
+      if (this.activeTab === 'all') {
+        this.onShowAll();
+      } else {
+        this.onShowPerStatus(this.activeTab);
+      }
+    },
+    minusPage() {
+      this.page--;
+      if (this.activeTab === 'all') {
+        this.onShowAll();
+      } else {
+        this.onShowPerStatus(this.activeTab);
+      }
+    },
     async onShowPerStatus(status) {
-      const { data } = await axios.get('/api/students/category/'+status);
-      console.log('showperstatus', data.data);
-      this.listData = data.data;
+      const { data } = await axios.get('/api/students/category/'+status, {
+        params: {
+          page: this.page
+        }
+      });
+      this.total = data.data.total;
+      this.listData = data.data.data;
       this.activeTab = status;
     },
     birthdayFormat(birtday) {
@@ -155,6 +190,20 @@ export default {
 </script>
 
 <style scoped>
+  .pagination-btn {
+    background-color: #e1e1e1;
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 100px;
+  }
+  .pagination-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin-top: 20px;
+    gap: 15px;
+  }
   .export-btn {
     background-color: #536e83;
     color: white;
